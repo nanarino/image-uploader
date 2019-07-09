@@ -43,6 +43,10 @@ axios的方式提交formdata。
 
 ## 效果
 
+![](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp.png)
+
+![](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp2.png)
+
 
 
 
