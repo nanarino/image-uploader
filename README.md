@@ -17,7 +17,7 @@
 
 
 
-## 实现
+## 功能实现
 
 拖拽多个文件和input选择单个文件实现选中和预览。
 
@@ -31,17 +31,17 @@ axios的方式提交formdata。
 
 
 
-## 版本
+## 版本参考
 
 ```json
 "axios": "^0.19.0",
 "vue": "^2.5.2",
 ```
-采用cdn引入本地html文件
+采用cdn外链引入到upImg.html文件中
 
 
 
-## 效果
+## 预览效果
 
 ![](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp.png)
 
