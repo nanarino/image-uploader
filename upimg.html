@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="./css/upimg2.0.css">
+  <link rel="stylesheet" href="./css/upimg.css">
   <link rel="stylesheet" href="./css/iconfont/iconfont.css">
   <title>Document</title>
 </head>
@@ -20,7 +20,7 @@
       <div class="photos-btn" @click="alerts">查看相册</div>
     </div>
     <div class="upimg" v-show="isShow">
-      <h1>图片上传组件2.0版
+      <h1>图片上传组件v2.0
         <i class="iconfont icon-guanbi off-btn" @click="hideBox"></i>
       </h1>
       <div class="title">
@@ -99,7 +99,7 @@
         this.isShow = false;
       },
       alerts(){
-        alert("该模块目前未开发！！敬请期待")
+        alert("这将是一个相册浏览组件！！敬请期待")
       },
       //拖拽三连
       dragenter(el){

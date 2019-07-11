@@ -39,15 +39,17 @@ axios的方式提交formdata。
 ```
 采用cdn外链引入到upImg.html文件中
 
+新版本中也会增加可供参考的.vue文件
+
 
 
 ## 预览效果
 
-![](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp.png)
+![效果图](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp.jpg)
 
-![](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp2.png)
+![效果图](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp2.jpg)
 
-
+在后续的版本中可能改变css效果
 
 
 
@@ -89,3 +91,6 @@ class Add_album(APIView):
 
  私信b站账号
 
+##### 其他主要贡献者
+
+qheyes（千鹤鵺，<https://github.com/qheyes>）
