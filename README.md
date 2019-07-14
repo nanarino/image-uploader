@@ -87,10 +87,6 @@ class Add_album(APIView):
 
 
 
-##### 推荐联系方式
-
- 私信b站账号
-
 ##### 其他主要贡献者
 
 qheyes（千鹤鵺，<https://github.com/qheyes>）
