@@ -1,5 +1,5 @@
 *{margin: 0;padding: 0;}
-.update{
+.upLoad{
   position: relative;
 }
 .allbtn{
@@ -17,7 +17,7 @@
   background-color: #5caae6;
   cursor: pointer;
 }
-.upimg{
+.upWin{
   position: fixed;
   top: 0;
   right: 0;

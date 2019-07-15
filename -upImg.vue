@@ -1,11 +1,11 @@
 <template>
-  <div class="update">
+  <div class="upLoad">
     <div class="allbtn">
       <div class="show-btn" @click="showBox">点击上传</div>
       <div class="photos-btn" @click="alerts">查看相册</div>
     </div>
-    <div class="upimg" v-show="isShow">
-      <h1>图片上传组件2.0版
+    <div class="upWin" v-show="isShow">
+      <h1>{{this.wintitle}}
         <i class="iconfont icon-guanbi off-btn" @click="hideBox"></i>
       </h1>
       <div class="title">
@@ -28,7 +28,6 @@
         @dragenter="dragenter($event)"
         @dragover="dragover($event)"
       >
-        <!-- 遍历盒子 -->
         <div 
           class="photo-item" 
           v-show="imgList.length > 0"
@@ -62,14 +61,23 @@
 
 <script>
   export default {
-    template: 'Update',
+    template: 'upImg',
     data(){
       return {
+        //默认状态
         isShow: false,
+        //组件标题
+        wintitle: '图片上传组件v2.1.0',
+        //相册标题
         title: '',
+        //上传数量上限
         maxNumber: 9,
+        //上传文件列表
         imgList: [],
-        size: 0            
+        //格式过滤列表
+        filterList: ["image/gif","image/jpeg","image/png","image/x-icon"],
+        //文件总大小
+        size: 0        
       }
     },
     methods: {
@@ -80,7 +88,7 @@
         this.isShow = false;
       },
       alerts(){
-        alert("该模块目前未开发！！敬请期待")
+        alert("这将是一个相册浏览组件！！敬请期待")
       },
       //拖拽三连
       dragenter(el){
@@ -94,8 +102,6 @@
       drop(el){
         el.stopPropagation();
         el.preventDefault();  
-        console.log(this.imgList.length, el.dataTransfer.files.length);
-        
         if(this.imgList.length + el.dataTransfer.files.length > this.maxNumber){      
           alert("已经超出张数！！！")
           return;
@@ -105,23 +111,16 @@
       },
       //遍历图片列表
       filesList(files){
-        for (let i = 0; i < files.length; i++) {
-          canupList=["image/gif","image/jpeg","image/png","image/x-icon"];
-          if(canupList.indexOf(files[i].type)===-1){continue;}
-          this.fileAdd(files[i]);
-        }
+        [...files].filter((v)=>this.filterList.indexOf(v.type)!==-1).forEach((v)=>this.fileAdd(v))
       },
       //添加到渲染列表
       fileAdd(file){
-        this.size = this.size + file.size;//总大小
+        this.size += file.size;//总大小
         let reader = new FileReader();
-        let that = this; 
         reader.readAsDataURL(file);
-        reader.onload = function(){
-          file.src = this.result;
-          that.imgList.push({
-            file
-          });
+        reader.onload = ()=>{
+          file.src = reader.result;
+          this.imgList.push({file});
         }
       },
       //单文件上传
@@ -136,7 +135,7 @@
       },
       //删除图片
       delImg(index){
-        this.size = this.size - this.imgList[index].file.size;//总大小
+        this.size -= this.imgList[index].file.size;//总大小
         this.imgList.splice(index, 1);
       },
       postData(){
@@ -146,9 +145,9 @@
         }
         if(this.imgList.length < 1){
           alert("请至少选择一张图片上传")
-          return
+          return;
         }
-        var formData= new FormData();  
+        var formData = new FormData();  
         this.imgList.forEach((value, index) => {
           formData.append("file" + index, value.file);
         });
@@ -171,12 +170,11 @@
         return (this.size  / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
       }
     }
- }
+  }
 </script>
 
 <style scoped>
-
-.update{
+.upLoad{
   position: relative;
 }
 .allbtn{
@@ -347,5 +345,4 @@ h1 .off-btn{
   opacity: 0;
   cursor: pointer;
 }
- 
 </style>
