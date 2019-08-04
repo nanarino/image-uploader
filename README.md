@@ -1,4 +1,10 @@
 # vue-upImg
+v-1.0.1：样式更新
+
+
+
+## 功能
+
 这是一个用于PC端的相册上传的vue组件
 
 ---
@@ -9,15 +15,7 @@
 
 而在预览的时候是请求后台返回渲染
 
----
-
 但是本组件它可以在预览之后再选择修改已经选中的图片
-
----
-
-
-
-## 功能实现
 
 拖拽多个文件和input选择单个文件实现选中和预览。
 
@@ -31,7 +29,7 @@ axios的方式提交formdata。
 
 
 
-## 版本参考
+## 依赖
 
 ```json
 "axios": "^0.19.0",
@@ -43,13 +41,13 @@ axios的方式提交formdata。
 
 
 
-## 预览效果
+## 预览
 
 ![效果图](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp.jpg)
 
 ![效果图](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp2.jpg)
 
-在后续的版本中可能改变css效果
+当前效果图为v-0.1.0版本效果图，在后续的版本中css效果有所不同
 
 
 
@@ -89,4 +87,5 @@ class Add_album(APIView):
 
 ##### 其他主要贡献者
 
-qheyes（千鹤鵺，<https://github.com/qheyes>）
+qheyes（千鹤鵺，<https://github.com/qheyes>），他的仓库里的分支更新了【上传的进度条】的功能。
+
