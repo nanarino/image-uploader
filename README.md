@@ -1,5 +1,5 @@
 # vue-upImg
-v-1.0.1：样式更新
+v-0.1.0：初版
 
 
 
@@ -47,7 +47,7 @@ axios的方式提交formdata。
 
 ![效果图](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp2.jpg)
 
-当前效果图为v-0.1.0版本效果图，在后续的版本中css效果有所不同
+在后续的版本中css效果可能有所不同
 
 
 
@@ -87,5 +87,4 @@ class Add_album(APIView):
 
 ##### 其他主要贡献者
 
-qheyes（千鹤鵺，<https://github.com/qheyes>），他的仓库里的分支更新了【上传的进度条】的功能。
-
+qheyes（千鹤鵺，<https://github.com/qheyes>）
