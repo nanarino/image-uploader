@@ -38,9 +38,13 @@ axios的方式提交formdata。
 "axios": "^0.19.0",
 "vue": "^2.5.2",
 ```
-采用cdn外链引入到upImg.html文件中
+采用cdn外链引入到~~upImg.html~~文件中
 
-新版本中也会增加可供参考的.vue文件
+~~新版本中也会增加可供参考的.vue文件~~
+
+已添加为upImg.vue文件
+
+原upImg.html重命名为index.html文件作为展示
 
 
 
@@ -51,6 +55,8 @@ axios的方式提交formdata。
 ![效果图](https://raw.githubusercontent.com/nanarino/vue-upImg/master/img/exp2.jpg)
 
 当前效果图为v-0.1.0版本效果图，在后续的版本中css效果有所不同
+
+最新版的展示在本仓库地址：https://nanarino.github.io/vue-upImg/
 
 
 
