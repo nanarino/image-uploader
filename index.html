@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,9 @@
     <link rel="stylesheet" href="./css/iconfont/iconfont.css">
     <title>VUE上传组件</title>
 </head>
+
 <body>
-    <div id="app"/>
+    <div id="app" />
 </body>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -75,7 +77,7 @@
                 </div>
             </div>
         `,
-        data(){
+        data() {
             return {
                 //默认状态
                 isShow: false,
@@ -88,101 +90,101 @@
                 //上传文件列表
                 imgList: [],
                 //格式过滤列表
-                filterList: ["image/gif","image/jpeg","image/png","image/x-icon"],
+                filterList: ["image/gif", "image/jpeg", "image/png", "image/x-icon"],
                 //文件总大小
-                size: 0 
+                size: 0
             }
         },
         methods: {
-            showBox(){
+            showBox() {
                 this.isShow = true;
             },
-            hideBox(){
+            hideBox() {
                 this.isShow = false;
             },
-            alerts(){
+            alerts() {
                 alert("这将是一个相册浏览组件！！敬请期待")
             },
             //拖拽三连
-            dragenter(el){
+            dragenter(el) {
                 el.stopPropagation();
                 el.preventDefault();
             },
-            dragover(el){
+            dragover(el) {
                 el.stopPropagation();
                 el.preventDefault();
             },
-            drop(el){
+            drop(el) {
                 el.stopPropagation();
-                el.preventDefault();  
-                if(this.imgList.length + el.dataTransfer.files.length > this.maxNumber){      
+                el.preventDefault();
+                if (this.imgList.length + el.dataTransfer.files.length > this.maxNumber) {
                     alert("已经超出张数！！！")
                     return;
-                }else{                
+                } else {
                     this.filesList(el.dataTransfer.files);
-                }      
+                }
             },
             //遍历图片列表
-            filesList(files){
-                [...files].filter((v)=>this.filterList.indexOf(v.type)!==-1).forEach((v)=>this.fileAdd(v))
+            filesList(files) {
+                [...files].filter((v) => this.filterList.indexOf(v.type) !== -1).forEach((v) => this.fileAdd(v))
             },
             //添加到渲染列表
-            fileAdd(file){
+            fileAdd(file) {
                 this.size += file.size;//总大小
                 let reader = new FileReader();
                 reader.readAsDataURL(file);
-                reader.onload = ()=>{
+                reader.onload = () => {
                     file.src = reader.result;
-                    this.imgList.push({file});
+                    this.imgList.push({ file });
                 }
             },
             //单文件上传
-            updateImg(el){
-                if(!el.target.files[0].size) return;
-                if(this.imgList.length >= this.maxNumber){
-                    alert("已经超出张数！！！")    
+            updateImg(el) {
+                if (!el.target.files[0].size) return;
+                if (this.imgList.length >= this.maxNumber) {
+                    alert("已经超出张数！！！")
                     return;
-                }else{
+                } else {
                     this.filesList(el.target.files);
-                }     
+                }
             },
             //删除图片
-            delImg(index){
+            delImg(index) {
                 this.size -= this.imgList[index].file.size;//总大小
                 this.imgList.splice(index, 1);
             },
-            postData(){
-                if(!this.title.trim()){
+            postData() {
+                if (!this.title.trim()) {
                     alert("当前标题为空请输入标题！")
                     return;
                 }
-                if(this.imgList.length < 1){
+                if (this.imgList.length < 1) {
                     alert("请至少选择一张图片上传")
                     return;
                 }
-                var formData = new FormData();  
+                var formData = new FormData();
                 this.imgList.forEach((value, index) => {
                     formData.append("file" + index, value.file);
                 });
                 formData.append("length", this.imgList.length);
-                formData.append("title", this.title);     
-                this.$axios.post("http://127.0.0.1:8000/addAlbum/",formData,{
-                    headers:{'Content-Type':'multipart/form-data'}
+                formData.append("title", this.title);
+                this.$axios.post("http://127.0.0.1:8000/addAlbum/", formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
                 }).then(res => {
                     alert(res.data.msg)
-                }).catch(rej =>{
-                    (rej == "Error: Network Error") && confirm("本示例中的axios上传地址为作者本地测试地址或者您修改后的自定义配置不正确，是否前往github查看文档") && (location.href='https://github.com/nanarino/vue-upImg');
+                }).catch(rej => {
+                    (rej == "Error: Network Error") && confirm("本示例中的axios上传地址为作者本地测试地址或者您修改后的自定义配置不正确，是否前往github查看文档") && (location.href = 'https://github.com/nanarino/vue-upImg');
                 })
-            } 
+            }
         },
         computed: {
             //计算大小
-            bySize(){
+            bySize() {
                 if (this.size === 0) return '0 B';
-                let k = 1024, 
+                let k = 1024,
                     sizes = ['B', 'KB', 'MB', 'GB'],
-                    i = Math.floor(Math.log(this.size ) / Math.log(k));
-                return (this.size  / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+                    i = Math.floor(Math.log(this.size) / Math.log(k));
+                return (this.size / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
             }
         }
     }
