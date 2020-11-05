@@ -50,6 +50,7 @@
             class="fileimg"
             ref="updateimg"
             @change="updateImg($event)"
+            multiple
           />
           <i class="iconfont icon-tianjia"></i>
           <span>点击添加或拖拽图片</span>
@@ -105,7 +106,7 @@
         if(this.imgList.length + el.dataTransfer.files.length > this.maxNumber){      
           alert("已经超出张数！！！")
           return;
-        }else{                
+        }else{ //拖拽的文件上传
           this.filesList(el.dataTransfer.files);
         }      
       },
@@ -123,15 +124,14 @@
           this.imgList.push({file});
         }
       },
-      //单文件上传
-      updateImg(el){
-        if (!el.target.files[0].size) return;
-        if(this.imgList.length >= this.maxNumber){
-          alert("已经超出张数！！！")    
+      //input选择文件上传
+      updateImg(el) {
+        if (this.imgList.length + el.target.files.length > this.maxNumber) {
+          alert("已经超出张数！！！")
           return;
-        }else{
+        } else { //拖拽的文件上传
           this.filesList(el.target.files);
-        }     
+        }
       },
       //删除图片
       delImg(index){
