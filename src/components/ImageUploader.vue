@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, defineExpose } from 'vue'
-
+import { ref, reactive } from 'vue'
 
 const {
   maxCount = 10,
@@ -14,9 +13,8 @@ interface FileWithBase64 extends File {
   src: string
 }
 const imgList = reactive<FileWithBase64[]>([])
-defineExpose({ imgList })
-
 const size = ref(0)
+defineExpose({ imgList, size }) //`defineExpose` is a compiler macro and no longer needs to be imported
 
 const stopDrag = (e: DragEvent) => {
   e.stopPropagation()

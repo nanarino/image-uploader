@@ -6,10 +6,14 @@ interface FileWithBase64 extends File {
   src: string
 }
 
-const data = ref({ imgList: reactive<FileWithBase64[]>([]) })
+const data = ref({
+  imgList: reactive<FileWithBase64[]>([]),
+  size: ref(0)
+})
 
 const submit = () => {
   console.log(Array.from(data.value.imgList))
+  console.log(data.value.size)
 }
 
 </script>
