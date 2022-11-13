@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import ImageUploader from './components/ImageUploader.vue'
+import ImageUploader from './components/ImageUploader/index.vue'
+import { FileWithBase64 } from './components/ImageUploader/interface'
 
-interface FileWithBase64 extends File {
-  src: string
-}
-
-const data = ref({
-  imgList: reactive<FileWithBase64[]>([]),
-  size: ref(0)
-})
+const data = reactive<FileWithBase64[]>([])
+const ImageUploaderRef = ref({ size: ref(0) })
 
 const submit = () => {
-  console.log(Array.from(data.value.imgList))
-  console.log(data.value.size)
+  console.log(...data)
+  console.log(ImageUploaderRef.value.size)
 }
 
 </script>
@@ -23,7 +18,8 @@ const submit = () => {
     <div class="allbtn">
       <div class="show-btn" @click="submit">点击上传</div>
     </div>
-    <ImageUploader :maxCount="9" :accept="[`image/gif`, `image/jpeg`, `image/png`]" ref="data" />
+    <ImageUploader v-model:imgList="data" :maxCount="9" :accept="[`image/gif`, `image/jpeg`, `image/png`]"
+      ref="ImageUploaderRef" />
   </div>
 </template>
 

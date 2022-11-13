@@ -1,6 +1,6 @@
 # vue-image-uploader
 
-用于图片上传的vue3组件
+用于图片上传的vue3组件demo
 
 
 ```base
