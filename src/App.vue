@@ -4,7 +4,7 @@ import ImageUploader from './components/ImageUploader/index.vue'
 import { FileWithBase64 } from './components/ImageUploader/interface'
 
 const data = reactive<FileWithBase64[]>([])
-const ImageUploaderRef = ref({ size: ref(0) })
+const ImageUploaderRef = ref({ size: 0 })
 
 const submit = () => {
   console.log(...data)
