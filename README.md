@@ -5,12 +5,12 @@
 
 ```base
 # 安装依赖
-npm i
+pnpm i
 
 # 运行
-npm run dev
+npx vite
 
 # 打包
-npm run build
+pnpm build
 
 ```
