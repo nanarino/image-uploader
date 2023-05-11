@@ -3,11 +3,11 @@ import { ref, reactive } from 'vue'
 import ImageUploader from './components/ImageUploader/index.vue'
 import { FileWithBase64 } from './components/ImageUploader/interface'
 
-const data = reactive<FileWithBase64[]>([])
+const imgs = reactive<FileWithBase64[]>([])
 const ImageUploaderRef = ref({ size: 0 })
 
-const submit = () => {
-  console.log(...data)
+const change = (...args: any) => {
+  console.log(...args)
   console.log(ImageUploaderRef.value.size)
 }
 
@@ -15,11 +15,8 @@ const submit = () => {
 
 <template>
   <div class="upLoad">
-    <div class="allbtn">
-      <div class="show-btn" @click="submit">点击上传</div>
-    </div>
-    <ImageUploader v-model:imgList="data" :maxCount="9" :accept="[`image/gif`, `image/jpeg`, `image/png`]"
-      ref="ImageUploaderRef" />
+    <ImageUploader v-model="imgs" :maxCount="9" :accept="[`image/gif`, `image/jpeg`, `image/png`]"
+      ref="ImageUploaderRef" @onChange="change"/>
   </div>
 </template>
 
