@@ -2,20 +2,19 @@
 import { ref } from 'vue'
 import { FileWithBase64 } from './interface'
 
+const modelValue = defineModel<FileWithBase64[]>({ default: [], local: true })
 const props = withDefaults(defineProps<{
   accept?: string[]
-  maxCount?: number,
-  modelValue?: FileWithBase64[]
+  maxCount?: number
 }>(), {
   accept: () => ['image/*'],
-  maxCount: 10,
-  modelValue: () => <FileWithBase64[]>([])
+  maxCount: 10
 })
 
 const emit = defineEmits(['update:modelValue', 'onChange'])
 
 const size = ref(0)
-defineExpose({ size }) //`defineExpose` is a compiler macro and no longer needs to be imported
+defineExpose({ size })
 
 const stopDrag = (e: DragEvent) => {
   e.stopPropagation()
@@ -24,7 +23,7 @@ const stopDrag = (e: DragEvent) => {
 const drop = (e: DragEvent) => {
   e.stopPropagation()
   e.preventDefault()
-  if (props.modelValue.length + (e.dataTransfer?.files?.length || 0) > props.maxCount) {
+  if (modelValue.value.length + (e.dataTransfer?.files?.length || 0) > props.maxCount) {
     alert("已经超出张数！！！")
     return
   }
@@ -41,8 +40,8 @@ const fileAdd = (file: File) => {
   reader.readAsDataURL(file)
   reader.onload = () => {
     Reflect.set(file, 'src', reader.result)
-    props.modelValue.push(<FileWithBase64>file)
-    emit("update:modelValue", props.modelValue)
+    modelValue.value = [...modelValue.value, <FileWithBase64>file]
+    emit("update:modelValue", modelValue.value)
     emit("onChange", {
       file,
       action: 'append'
@@ -51,20 +50,21 @@ const fileAdd = (file: File) => {
 }
 
 const updateImg = (e: Event) => {
-  if (props.modelValue.length + ((<HTMLInputElement>e.target)?.files?.length || 0) > props.maxCount) {
+  if (modelValue.value.length + ((<HTMLInputElement>e.target)?.files?.length || 0) > props.maxCount) {
     alert("已经超出张数！！！")
     return
   }
   setImgList((<HTMLInputElement>e.target)?.files || [])
 }
 const delImg = (index: number) => {
-  size.value -= props.modelValue[index].size
+  size.value -= modelValue.value[index].size
   emit("onChange", {
-    file: props.modelValue.at(index),
+    file: modelValue.value.at(index),
     action: 'delete'
   })
-  props.modelValue.splice(index, 1)
-  emit("update:modelValue", props.modelValue)
+  // modelValue.splice(index, 1)
+  modelValue.value = modelValue.value.filter((v, i) => i != index)
+  emit("update:modelValue", modelValue.value)
 }
 </script>
 
