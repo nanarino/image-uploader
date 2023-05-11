@@ -45,7 +45,7 @@ const fileAdd = (file: File) => {
     emit("update:modelValue", props.modelValue)
     emit("onChange", {
       file,
-      active: 'append'
+      action: 'append'
     })
   }
 }
@@ -61,7 +61,7 @@ const delImg = (index: number) => {
   size.value -= props.modelValue[index].size
   emit("onChange", {
     file: props.modelValue.at(index),
-    active: 'delete'
+    action: 'delete'
   })
   props.modelValue.splice(index, 1)
   emit("update:modelValue", props.modelValue)
