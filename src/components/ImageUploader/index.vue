@@ -41,7 +41,7 @@ const fileAdd = (file: File) => {
   reader.onload = () => {
     Reflect.set(file, 'src', reader.result)
     modelValue.value = [...modelValue.value, <FileWithBase64>file]
-    emit("update:modelValue", modelValue.value)
+    // emit("update:modelValue", modelValue.value)
     emit("onChange", {
       file,
       action: 'append'
@@ -64,7 +64,7 @@ const delImg = (index: number) => {
   })
   // modelValue.splice(index, 1)
   modelValue.value = modelValue.value.filter((v, i) => i != index)
-  emit("update:modelValue", modelValue.value)
+  // emit("update:modelValue", modelValue.value)
 }
 </script>
 
