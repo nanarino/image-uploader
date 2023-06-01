@@ -20,34 +20,37 @@ const stopDrag = (e: DragEvent) => {
   e.stopPropagation()
   e.preventDefault()
 }
-const drop = (e: DragEvent) => {
+const drop = async (e: DragEvent) => {
   e.stopPropagation()
   e.preventDefault()
   if (modelValue.value.length + (e.dataTransfer?.files?.length || 0) > props.maxCount) {
     alert("已经超出张数！！！")
     return
   }
-  setImgList(e.dataTransfer?.files || [])
+  await setImgList(e.dataTransfer?.files || [])
 }
 
-const setImgList = (files: FileList | Array<File>) => {
-  Array.from(files).filter((v) => props.accept.filter(t => new RegExp(t).test(v.type)).length).forEach(fileAdd)
+const setImgList = async (files: FileList | Array<File>) => {
+  await Promise.all(Array.from(files).filter((v) => props.accept.filter(t => new RegExp(t).test(v.type)).length).map(fileAdd))
 }
 
-const fileAdd = (file: File) => {
+const fileAdd = async (file: File) => new Promise<void>((resolve, reject) => {
   size.value += file.size
   let reader = new FileReader()
   reader.readAsDataURL(file)
   reader.onload = () => {
     Reflect.set(file, 'src', reader.result)
-    modelValue.value = [...modelValue.value, <FileWithBase64>file]
-    // emit("update:modelValue", modelValue.value)
+    modelValue.value.push(<FileWithBase64>file)
+    // modelValue.value = [...modelValue.value, <FileWithBase64>file]
+    // 这种写法不能让reactive响应 但是无需手动emit
+    emit("update:modelValue", modelValue.value)
     emit("onChange", {
       file,
       action: 'append'
     })
+    resolve()
   }
-}
+})
 
 const updateImg = (e: Event) => {
   if (modelValue.value.length + ((<HTMLInputElement>e.target)?.files?.length || 0) > props.maxCount) {
@@ -62,9 +65,10 @@ const delImg = (index: number) => {
     file: modelValue.value.at(index),
     action: 'delete'
   })
-  // modelValue.splice(index, 1)
-  modelValue.value = modelValue.value.filter((v, i) => i != index)
-  // emit("update:modelValue", modelValue.value)
+  modelValue.value.splice(index, 1)
+  // modelValue.value = modelValue.value.filter((v, i) => i != index)
+  // 这种写法不能让reactive响应 但是无需手动emit
+  emit("update:modelValue", modelValue.value)
 }
 </script>
 
@@ -81,8 +85,7 @@ const delImg = (index: number) => {
         <div class="pic-name">{{ item.name }}</div>
       </div>
       <div class="photo-item-btn">
-        <input type="file" :accept="`${accept || 'image/*'}`" class="fileimg" ref="updateimg" @change="updateImg($event)"
-          multiple />
+        <input type="file" :accept="`${accept || 'image/*'}`" class="fileimg" @change="updateImg($event)" multiple />
         <i class="iconfont icon-tianjia"></i>
         <span>点击添加或拖拽图片</span>
       </div>

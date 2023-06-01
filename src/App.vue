@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import ImageUploader from './components/ImageUploader/index.vue'
 import { FileWithBase64 } from './components/ImageUploader/interface'
 
-const imgs = ref<FileWithBase64[]>([]) // 只能使用`ref`如果要使用reactive需要自己处理：在`@update:modelValue`中`imgs.splice`
+const imgs = reactive<FileWithBase64[]>([])
 const ImageUploaderRef = ref({ size: 0 })
 
 const change = (...args: any) => {
