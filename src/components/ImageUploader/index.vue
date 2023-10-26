@@ -52,12 +52,14 @@ const fileAdd = async (file: File) => new Promise<void>((resolve, reject) => {
   }
 })
 
-const updateImg = (e: Event) => {
-  if (modelValue.value.length + ((<HTMLInputElement>e.target)?.files?.length || 0) > props.maxCount) {
+const updateImg = async (e: Event) => {
+  const files = (<HTMLInputElement>e.target)?.files || <File []>[]
+  if (modelValue.value.length + files.length > props.maxCount) {
     alert("已经超出张数！！！")
     return
   }
-  setImgList((<HTMLInputElement>e.target)?.files || [])
+  await setImgList(files)
+  ;(<HTMLInputElement>e.target).value = ''
 }
 const delImg = (index: number) => {
   size.value -= modelValue.value[index].size
@@ -79,7 +81,7 @@ const delImg = (index: number) => {
       v-for="(item, index) of modelValue" 
       :key="index"
     >
-      <img :src="item.src">
+      <img :src="item.src" @dragstart="stopDrag">
       <div class="na-image-footer">
         <div class="na-image-footer-content">
           <div class="na-paragraph" data-ellipsis="2">
@@ -98,7 +100,7 @@ const delImg = (index: number) => {
       @dragenter="stopDrag"
       @dragover="stopDrag"
     >
-      <input type="file" 
+      <input type="file"
         :accept="`${accept || 'image/*'}`"
         @change="updateImg($event)"
         multiple 
