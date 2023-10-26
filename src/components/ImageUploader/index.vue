@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<{
   maxCount?: number
 }>(), {
   accept: () => ['image/*'],
-  maxCount: 10
+  maxCount: Infinity
 })
 
 const emit = defineEmits<{
@@ -28,8 +28,7 @@ const drop = async (e: DragEvent) => {
   e.stopPropagation()
   e.preventDefault()
   if (modelValue.value.length + (e.dataTransfer?.files?.length || 0) > props.maxCount) {
-    emit("overflow")
-    return
+    return emit("overflow")
   }
   await setImgList(e.dataTransfer?.files || [])
 }
@@ -58,12 +57,12 @@ const fileAdd = async (file: File) => new Promise<void>((resolve, reject) => {
 
 const updateImg = async (e: Event) => {
   const files = (<HTMLInputElement>e.target)?.files || <File []>[]
-  if (modelValue.value.length + files.length > props.maxCount) {
+  if (modelValue.value.length + files.length <= props.maxCount) {
+    await setImgList(files)
+  } else {
     emit("overflow")
-    return
   }
-  await setImgList(files)
-  ;(<HTMLInputElement>e.target).value = ''
+  (<HTMLInputElement>e.target).value = ''
 }
 const delImg = (index: number) => {
   size.value -= modelValue.value[index].size
@@ -99,14 +98,15 @@ const delImg = (index: number) => {
       </div>
     </div>
     <div class="na-image" 
-      @drop="drop"
+      @drop="modelValue.length < props.maxCount ? drop($event) : stopDrag($event)"
       @dragenter="stopDrag"
       @dragover="stopDrag"
     >
       <input type="file"
+        :disabled="modelValue.length >= props.maxCount"
         :accept="`${accept || 'image/*'}`"
-        @change="updateImg($event)"
-        multiple 
+        @change="updateImg"
+        multiple
       />
       <i class="na-link iconfont icon-tianjia" />
       <span>点击添加或拖拽图片</span>
@@ -119,6 +119,16 @@ const delImg = (index: number) => {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
+
+  @media screen and (max-width: 876px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (max-width: 540px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (max-width: 360px) {
+    grid-template-columns: 1fr;
+  }
 
   .na-image{
     aspect-ratio: 1 / 1;
