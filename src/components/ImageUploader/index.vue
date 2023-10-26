@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FileWithBase64 } from './interface'
+import { Gazo } from './interface'
 
-const modelValue = defineModel<FileWithBase64[]>({ default: [], local: true })
+const modelValue = defineModel<Gazo[]>({ default: [], local: true })
 const props = withDefaults(defineProps<{
   accept?: string[]
   maxCount?: number
@@ -11,7 +11,11 @@ const props = withDefaults(defineProps<{
   maxCount: 10
 })
 
-const emit = defineEmits(['update:modelValue', 'onChange'])
+const emit = defineEmits<{
+  (event: 'update:modelValue', item: Gazo[]): void
+  (event: 'change', item: { file: Gazo, action: 'append'|'remove' }): void
+  (event: 'overflow'): void
+}>()
 
 const size = ref(0)
 defineExpose({ size })
@@ -24,7 +28,7 @@ const drop = async (e: DragEvent) => {
   e.stopPropagation()
   e.preventDefault()
   if (modelValue.value.length + (e.dataTransfer?.files?.length || 0) > props.maxCount) {
-    alert("已经超出张数！！！")
+    emit("overflow")
     return
   }
   await setImgList(e.dataTransfer?.files || [])
@@ -36,15 +40,15 @@ const setImgList = async (files: FileList | Array<File>) => {
 
 const fileAdd = async (file: File) => new Promise<void>((resolve, reject) => {
   size.value += file.size
-  let reader = new FileReader()
+  // const url = URL.createObjectURL(file)
+  const reader = new FileReader()
   reader.readAsDataURL(file)
   reader.onload = () => {
-    Reflect.set(file, 'src', reader.result)
-    modelValue.value.push(<FileWithBase64>file)
-    // modelValue.value = [...modelValue.value, <FileWithBase64>file]
-    // 这种写法不能让reactive响应 但是无需手动emit
+    Reflect.set(file, 'url', reader.result)
+    modelValue.value.push(file)
+    // 还是需手动emit 它没有提供defineModels那样的deep选项 只能对简单类型自动emit
     emit("update:modelValue", modelValue.value)
-    emit("onChange", {
+    emit("change", {
       file,
       action: 'append'
     })
@@ -55,7 +59,7 @@ const fileAdd = async (file: File) => new Promise<void>((resolve, reject) => {
 const updateImg = async (e: Event) => {
   const files = (<HTMLInputElement>e.target)?.files || <File []>[]
   if (modelValue.value.length + files.length > props.maxCount) {
-    alert("已经超出张数！！！")
+    emit("overflow")
     return
   }
   await setImgList(files)
@@ -63,13 +67,12 @@ const updateImg = async (e: Event) => {
 }
 const delImg = (index: number) => {
   size.value -= modelValue.value[index].size
-  emit("onChange", {
-    file: modelValue.value.at(index),
-    action: 'delete'
+  emit("change", {
+    file: modelValue.value.at(index) as Gazo,
+    action: 'remove'
   })
   modelValue.value.splice(index, 1)
-  // modelValue.value = modelValue.value.filter((v, i) => i != index)
-  // 这种写法不能让reactive响应 但是无需手动emit
+  // 还是需手动emit 它没有提供defineModels那样的deep选项 只能对简单类型自动emit
   emit("update:modelValue", modelValue.value)
 }
 </script>
@@ -81,7 +84,7 @@ const delImg = (index: number) => {
       v-for="(item, index) of modelValue" 
       :key="index"
     >
-      <img :src="item.src" @dragstart="stopDrag">
+      <img :src="item.url" @dragstart="stopDrag">
       <div class="na-image-footer">
         <div class="na-image-footer-content">
           <div class="na-paragraph" data-ellipsis="2">
@@ -130,7 +133,7 @@ const delImg = (index: number) => {
       font-size: 16px;
       color: rgb(var(--primary-6));
       border: 2px dashed rgb(var(--primary-6));
-      opacity: .8;
+      opacity: .5;
     }
 
     input[type=file]{

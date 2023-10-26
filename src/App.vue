@@ -1,27 +1,36 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import ImageUploader from './components/ImageUploader/index.vue'
-import { FileWithBase64 } from './components/ImageUploader/interface'
+import { Gazo } from './components/ImageUploader/interface'
 
-const imgs = reactive<FileWithBase64[]>([])
+const imgs = reactive<Gazo[]>([{
+  url: '/FhwytrFUUAIX0L7.png',
+  name: 'Kirby.png',
+  size: 557136,
+  type: "image/png"
+}])
 const ImageUploaderRef = ref({ size: 0 })
 
-const change = (...args: any) => {
-  console.log(...args)
+const change = (item: {
+    file: Gazo;
+    action: "append" | "remove";
+}) => {
+  console.log(item)
   console.log(ImageUploaderRef.value.size)
 }
 </script>
 
 <template>
-  <p>
-    {{ imgs.map((x: FileWithBase64) => x.name) }}
-  </p>
-  
   <ImageUploader 
     v-model="imgs"
     :maxCount="9"
     :accept="[`image/gif`, `image/jpeg`, `image/png`]"
     ref="ImageUploaderRef"
-    @onChange="change"
+    @change="change"
+    @overflow="console.log(`超出数量限制`)"
   />
+
+  <p>
+    {{ imgs.map((x: Gazo) => x.name) }}
+  </p>
 </template>

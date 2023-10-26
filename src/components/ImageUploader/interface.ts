@@ -1,3 +1,7 @@
-export interface FileWithBase64 extends File {
-  src: string
+export interface Gazo  {
+  meta?: Record<string, any>
+  url?: string
+  name: string
+  size: number
+  type: string
 }
