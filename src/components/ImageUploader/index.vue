@@ -73,141 +73,78 @@ const delImg = (index: number) => {
 </script>
 
 <template>
-  <div class="upWin">
-    <div class="photobox" @drop="drop($event)" @dragenter="stopDrag($event)" @dragover="stopDrag($event)">
-      <div class="photo-item" v-show="modelValue.length > 0" v-for="(item, index) in modelValue" :key="index">
-        <div class="pic-del">
-          <i class="iconfont icon-shanchu del" @click="delImg(index)"></i>
+  <div class="na-image-uploader">
+    <div class="na-image" 
+      v-show="modelValue.length > 0"
+      v-for="(item, index) of modelValue" 
+      :key="index"
+    >
+      <img :src="item.src">
+      <div class="na-image-footer">
+        <div class="na-image-footer-content">
+          <div class="na-paragraph" data-ellipsis="2">
+            {{ item.name }}
+          </div>
         </div>
-        <div class="pic-img">
-          <img :src="item.src" alt="">
+        <div class="na-image-footer-action">
+          <i class="na-link iconfont icon-shanchu" 
+            @click="delImg(index)"
+          />
         </div>
-        <div class="pic-name">{{ item.name }}</div>
       </div>
-      <div class="photo-item-btn">
-        <input type="file" :accept="`${accept || 'image/*'}`" class="fileimg" @change="updateImg($event)" multiple />
-        <i class="iconfont icon-tianjia"></i>
-        <span>点击添加或拖拽图片</span>
-      </div>
+    </div>
+    <div class="na-image" 
+      @drop="drop"
+      @dragenter="stopDrag"
+      @dragover="stopDrag"
+    >
+      <input type="file" 
+        :accept="`${accept || 'image/*'}`"
+        @change="updateImg($event)"
+        multiple 
+      />
+      <i class="na-link iconfont icon-tianjia" />
+      <span>点击添加或拖拽图片</span>
     </div>
   </div>
 </template>
 
-<style scoped>
-.upWin {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin: auto;
-  overflow: hidden;
-  width: 1200px;
-  min-height: 500px;
-  height: 700px;
-  font-size: 12px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px #535658;
-}
+<style scoped lang="scss">
+.na-image-uploader{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
 
-.photobox {
-  overflow: hidden;
-  padding: 30px 15px;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  background-color: #fff
-}
+  .na-image{
+    aspect-ratio: 1 / 1;
+    border-radius: var(--border-radius-lg);
 
-.photo-item {
-  position: relative;
-  float: left;
-  margin: 0 15px 10px;
-  width: 198px;
-  height: 198px;
-  text-align: center;
-  border: 1px solid #e1e1e1;
-}
+    &:has(input[type=file]){
+      display: flex;
+      gap: 16px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: rgb(var(--primary-6));
+      border: 2px dashed rgb(var(--primary-6));
+      opacity: .8;
+    }
 
-.photo-item:hover .pic-del {
-  display: block;
-}
+    input[type=file]{
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
 
-.photo-item .pic-del {
-  display: none;
-  position: absolute;
-  bottom: 40px;
-  left: 0;
-  padding-right: 6px;
-  width: 100%;
-  height: 30px;
-  background-color: rgba(0, 0, 0, .3);
-  box-sizing: border-box;
-}
-
-.photo-item .pic-del .del {
-  float: right;
-  color: #fff;
-  font-size: 26px;
-  cursor: pointer;
-}
-
-.photo-item .pic-img {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 158px;
-}
-
-.photo-item .pic-img img {
-  max-width: 100%;
-  max-height: 100%;
-  vertical-align: middle;
-}
-
-.photo-item .pic-name {
-  padding: 0 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  color: #666;
-  background-color: #eee;
-  box-sizing: border-box;
-}
-
-.photo-item-btn {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  float: left;
-  margin: 0 15px 10px;
-  width: 198px;
-  height: 198px;
-  border: 1px dashed #e1e1e1;
-  border-radius: 6px;
-  font-size: 16px;
-  color: #ccc;
-}
-
-.photo-item-btn i {
-  font-size: 40px;
-  margin-bottom: 20px;
-}
-
-.photo-item-btn .fileimg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 198px;
-  height: 198px;
-  opacity: 0;
-  cursor: pointer;
+    .na-link{
+      font-size: 40px;
+    }
+    
+    .na-image-footer-action>.na-link{
+      font-size: 32px;
+    }
+  }
 }
 </style>
