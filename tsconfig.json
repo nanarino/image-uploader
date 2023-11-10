@@ -5,6 +5,10 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,

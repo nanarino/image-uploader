@@ -2,8 +2,6 @@
 
 用于图片上传的vue3组件demo
 
-![Kirby](./public/Kirby.png)
-
 ```base
 # 安装依赖
 pnpm i
@@ -15,3 +13,5 @@ npx vite
 pnpm build
 
 ```
+
+![Kirby](./public/Kirby.png)

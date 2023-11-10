@@ -97,13 +97,13 @@ const delImg = (index: number) => {
         </div>
       </div>
     </div>
-    <div class="na-image" 
+    <div class="na-image"
+      v-show="modelValue.length < props.maxCount"
       @drop="modelValue.length < props.maxCount ? drop($event) : stopDrag($event)"
       @dragenter="stopDrag"
       @dragover="stopDrag"
     >
       <input type="file"
-        :disabled="modelValue.length >= props.maxCount"
         :accept="`${accept || 'image/*'}`"
         @change="updateImg"
         multiple
