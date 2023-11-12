@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, nextTick } from 'vue'
 import ImageUploader from '@/components/ImageUploader/index.vue'
 import message from '@/components/Message'
 import { Gazo } from '@/components/ImageUploader/interface'
@@ -7,11 +7,13 @@ import { Gazo } from '@/components/ImageUploader/interface'
 const imgs = reactive<Gazo[]>([])
 const ImageUploaderRef = ref({ size: 0 })
 
-const change = (item: {
+const change = async (item: {
   file: Gazo;
   action: "append" | "remove";
 }) => {
   console.log(item)
+  // 变化后 size稍后才响应
+  await nextTick()
   console.log(ImageUploaderRef.value.size)
 }
 

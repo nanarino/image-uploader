@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { Gazo } from './interface'
 
 const modelValue = defineModel<Gazo[]>({ default: [], local: true })
@@ -16,9 +16,6 @@ const emit = defineEmits<{
   (event: 'change', item: { file: Gazo, action: 'append'|'remove' }): void
   (event: 'overflow'): void
 }>()
-
-const size = ref(0)
-defineExpose({ size })
 
 const stopDrag = (e: DragEvent) => {
   e.stopPropagation()
@@ -38,7 +35,6 @@ const setImgList = async (files: FileList | Array<File>) => {
 }
 
 const fileAdd = async (file: File) => new Promise<void>((resolve, reject) => {
-  size.value += file.size
   // const url = URL.createObjectURL(file)
   const reader = new FileReader()
   reader.readAsDataURL(file)
@@ -65,7 +61,6 @@ const updateImg = async (e: Event) => {
   (<HTMLInputElement>e.target).value = ''
 }
 const delImg = (index: number) => {
-  size.value -= modelValue.value[index].size
   emit("change", {
     file: modelValue.value.at(index) as Gazo,
     action: 'remove'
@@ -74,11 +69,15 @@ const delImg = (index: number) => {
   // 还是需手动emit 它没有提供defineModels那样的deep选项 只能对简单类型自动emit
   emit("update:modelValue", modelValue.value)
 }
+
+const size = computed(() => modelValue.value.reduce((size, file) => size + file.size, 0))
+defineExpose({ size })
 </script>
 
 <template>
   <div class="na-image-uploader">
-    <div class="na-image" 
+    <div 
+      class="na-image" 
       v-show="modelValue.length > 0"
       v-for="(item, index) of modelValue" 
       :key="index"
@@ -97,13 +96,17 @@ const delImg = (index: number) => {
         </div>
       </div>
     </div>
-    <div class="na-image"
+    <div 
+      class="na-image na-input-wrapper"
       v-show="modelValue.length < props.maxCount"
       @drop="modelValue.length < props.maxCount ? drop($event) : stopDrag($event)"
       @dragenter="stopDrag"
       @dragover="stopDrag"
+      data-primary
     >
-      <input type="file"
+      <input
+        type="file"
+        class="na-input"
         :accept="`${accept || 'image/*'}`"
         @change="updateImg"
         multiple
@@ -132,26 +135,7 @@ const delImg = (index: number) => {
 
   .na-image{
     aspect-ratio: 1 / 1;
-    border-radius: var(--border-radius-lg);
-
-    &:has(input[type=file]){
-      display: flex;
-      gap: 16px;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: rgb(var(--primary-6));
-      border: 2px dashed rgb(var(--primary-6));
-      opacity: .5;
-    }
-
-    input[type=file]{
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
+    border-radius: var(--border-radius-md);
 
     .na-link{
       font-size: 40px;
