@@ -2,6 +2,7 @@
 import { ref, nextTick } from 'vue'
 import ImageUploader from '@/components/ImageUploader/index.vue'
 import message from '@/components/Message'
+import ThemeToggle from '@/components/ThemeToggle'
 import { Gazo } from '@/components/ImageUploader/interface'
 
 /**
@@ -42,4 +43,5 @@ void async function init() {
   <p class="na-font-mono">
     {{ imgs.map((x: Gazo) => x.name) }}
   </p>
+  <ThemeToggle />
 </template>

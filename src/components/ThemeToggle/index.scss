@@ -1,0 +1,33 @@
+#themeToggle {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+
+  display: grid;
+  border-radius: 50%;
+  --padding-horizonal-button: 16px;
+  --padding-vertical-button: 16px;
+
+  svg {
+    grid-area: 1/1/2/2;
+    transition: opacity .3s;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+:root[data-theme=light] {
+  #themeToggle {
+    svg:first-child {
+      opacity: 0;
+    }
+  }
+}
+
+:root[data-theme=dark] {
+  #themeToggle {
+    svg:last-child {
+      opacity: 0;
+    }
+  }
+}
