@@ -11,7 +11,7 @@ import { Gazo } from '@/components/ImageUploader/interface'
  * 但是不影响使用 也可以不使用 `v-model`
  */
 const imgs = ref<Gazo[]>([])
-const ImageUploaderRef = ref({ size: 0 })
+const ImageUploaderRef = ref<InstanceType<typeof ImageUploader>>()
 
 const change = async (item: {
   file: Gazo;
@@ -20,7 +20,7 @@ const change = async (item: {
   console.log(item)
   // 变化后 size稍后才响应
   await nextTick()
-  console.log(ImageUploaderRef.value.size)
+  console.log(ImageUploaderRef.value?.size)
 }
 
 void async function init() {

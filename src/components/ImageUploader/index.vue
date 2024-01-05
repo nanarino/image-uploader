@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { Gazo } from './interface'
 
-const modelValue = defineModel<Gazo[]>({ default: [], local: true })
+const images = defineModel<Gazo[]>('modelValue', { default: [] })
 const props = withDefaults(defineProps<{
   accept?: string[]
   maxCount?: number
@@ -24,7 +24,7 @@ const stopDrag = (e: DragEvent) => {
 const drop = async (e: DragEvent) => {
   e.stopPropagation()
   e.preventDefault()
-  if (modelValue.value.length + (e.dataTransfer?.files?.length || 0) > props.maxCount) {
+  if (images.value.length + (e.dataTransfer?.files?.length || 0) > props.maxCount) {
     return emit("overflow")
   }
   await setImgList(e.dataTransfer?.files || [])
@@ -40,9 +40,9 @@ const fileAdd = async (file: File) => new Promise<void>((resolve, reject) => {
   reader.readAsDataURL(file)
   reader.onload = () => {
     Reflect.set(file, 'url', reader.result)
-    modelValue.value.push(file)
+    images.value.push(file)
     // 还是需手动emit 它没有提供defineModels那样的deep选项 只能对简单类型自动emit
-    emit("update:modelValue", modelValue.value)
+    emit("update:modelValue", images.value)
     emit("change", {
       file,
       action: 'append'
@@ -53,7 +53,7 @@ const fileAdd = async (file: File) => new Promise<void>((resolve, reject) => {
 
 const updateImg = async (e: Event) => {
   const files = (<HTMLInputElement>e.target)?.files || <File []>[]
-  if (modelValue.value.length + files.length <= props.maxCount) {
+  if (images.value.length + files.length <= props.maxCount) {
     await setImgList(files)
   } else {
     emit("overflow")
@@ -62,15 +62,15 @@ const updateImg = async (e: Event) => {
 }
 const delImg = (index: number) => {
   emit("change", {
-    file: modelValue.value.at(index) as Gazo,
+    file: images.value.at(index) as Gazo,
     action: 'remove'
   })
-  modelValue.value.splice(index, 1)
+  images.value.splice(index, 1)
   // 还是需手动emit 它没有提供defineModels那样的deep选项 只能对简单类型自动emit
-  emit("update:modelValue", modelValue.value)
+  emit("update:modelValue", images.value)
 }
 
-const size = computed(() => modelValue.value.reduce((size, file) => size + file.size, 0))
+const size = computed(() => images.value.reduce((size, file) => size + file.size, 0))
 defineExpose({ size })
 </script>
 
@@ -78,7 +78,7 @@ defineExpose({ size })
   <div class="na-image-uploader">
     <div 
       class="na-image" 
-      v-show="modelValue.length > 0"
+      v-show="images.length > 0"
       v-for="(item, index) of modelValue" 
       :key="index"
     >
@@ -98,8 +98,8 @@ defineExpose({ size })
     </div>
     <div 
       class="na-image na-input-wrapper"
-      v-show="modelValue.length < props.maxCount"
-      @drop="modelValue.length < props.maxCount ? drop($event) : stopDrag($event)"
+      v-show="images.length < props.maxCount"
+      @drop="images.length < props.maxCount ? drop($event) : stopDrag($event)"
       @dragenter="stopDrag"
       @dragover="stopDrag"
       data-primary
