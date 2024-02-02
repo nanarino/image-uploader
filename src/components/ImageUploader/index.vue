@@ -1,88 +1,103 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Gazo } from './interface'
+import { computed } from "vue";
+import { Gazo } from "./interface";
 
-const images = defineModel<Gazo[]>('modelValue', { default: [] })
-const props = withDefaults(defineProps<{
-  accept?: string[]
-  maxCount?: number
-}>(), {
-  accept: () => ['image/*'],
-  maxCount: Infinity
-})
+const images = defineModel<Gazo[]>("modelValue", { default: [] });
+const props = withDefaults(
+  defineProps<{
+    accept?: string[];
+    maxCount?: number;
+  }>(),
+  {
+    accept: () => ["image/*"],
+    maxCount: Infinity,
+  }
+);
 
 const emit = defineEmits<{
-  (event: 'update:modelValue', item: Gazo[]): void
-  (event: 'change', item: { file: Gazo, action: 'append'|'remove' }): void
-  (event: 'overflow'): void
-}>()
+  (event: "update:modelValue", item: Gazo[]): void;
+  (event: "change", item: { file: Gazo; action: "append" | "remove" }): void;
+  (event: "overflow"): void;
+}>();
 
 const stopDrag = (e: DragEvent) => {
-  e.stopPropagation()
-  e.preventDefault()
-}
+  e.stopPropagation();
+  e.preventDefault();
+};
 const drop = async (e: DragEvent) => {
-  e.stopPropagation()
-  e.preventDefault()
-  if (images.value.length + (e.dataTransfer?.files?.length || 0) > props.maxCount) {
-    return emit("overflow")
+  e.stopPropagation();
+  e.preventDefault();
+  if (
+    images.value.length + (e.dataTransfer?.files?.length || 0) >
+    props.maxCount
+  ) {
+    return emit("overflow");
   }
-  await setImgList(e.dataTransfer?.files || [])
-}
+  await setImgList(e.dataTransfer?.files || []);
+};
 
 const setImgList = async (files: FileList | Array<File>) => {
-  await Promise.all(Array.from(files).filter((v) => props.accept.filter(t => new RegExp(t).test(v.type)).length).map(fileAdd))
-}
+  await Promise.all(
+    Array.from(files)
+      .filter(
+        (v) => props.accept.filter((t) => new RegExp(t).test(v.type)).length
+      )
+      .map(fileAdd)
+  );
+};
 
-const fileAdd = async (file: File) => new Promise<void>((resolve, reject) => {
-  // const url = URL.createObjectURL(file)
-  const reader = new FileReader()
-  reader.readAsDataURL(file)
-  reader.onload = () => {
-    Reflect.set(file, 'url', reader.result)
-    images.value.push(file)
-    // 还是需手动emit 它没有提供defineModels那样的deep选项 只能对简单类型自动emit
-    emit("update:modelValue", images.value)
-    emit("change", {
-      file,
-      action: 'append'
-    })
-    resolve()
-  }
-})
+const fileAdd = async (file: File) =>
+  new Promise<void>((resolve, reject) => {
+    // const url = URL.createObjectURL(file)
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      Reflect.set(file, "url", reader.result);
+      images.value.push(file);
+      // 还是需手动emit 它没有提供defineModels那样的deep选项 只能对简单类型自动emit
+      emit("update:modelValue", images.value);
+      emit("change", {
+        file,
+        action: "append",
+      });
+      resolve();
+    };
+  });
 
 const updateImg = async (e: Event) => {
-  const files = (<HTMLInputElement>e.target)?.files || <File []>[]
+  const files = (<HTMLInputElement>e.target)?.files || <File[]>[];
   if (images.value.length + files.length <= props.maxCount) {
-    await setImgList(files)
+    await setImgList(files);
   } else {
-    emit("overflow")
+    emit("overflow");
   }
-  (<HTMLInputElement>e.target).value = ''
-}
+  (<HTMLInputElement>e.target).value = "";
+};
 const delImg = (index: number) => {
   emit("change", {
     file: images.value.at(index) as Gazo,
-    action: 'remove'
-  })
-  images.value.splice(index, 1)
+    action: "remove",
+  });
+  images.value.splice(index, 1);
   // 还是需手动emit 它没有提供defineModels那样的deep选项 只能对简单类型自动emit
-  emit("update:modelValue", images.value)
-}
+  emit("update:modelValue", images.value);
+};
 
-const size = computed(() => images.value.reduce((size, file) => size + file.size, 0))
-defineExpose({ size })
+const size = computed(() =>
+  images.value.reduce((size, file) => size + file.size, 0)
+);
+defineExpose({ size });
 </script>
 
 <template>
   <div class="na-image-uploader">
-    <div 
-      class="na-image" 
+    <div
+      class="na-image"
       v-show="images.length > 0"
-      v-for="(item, index) of modelValue" 
+      v-for="(item, index) of modelValue"
       :key="index"
     >
-      <img :src="item.url" @dragstart="stopDrag">
+      <img :src="item.url" @dragstart="stopDrag" />
       <div class="na-image-footer">
         <div class="na-image-footer-content">
           <div class="na-paragraph" data-ellipsis="2">
@@ -90,13 +105,11 @@ defineExpose({ size })
           </div>
         </div>
         <div class="na-image-footer-action">
-          <i class="na-link iconfont icon-shanchu" 
-            @click="delImg(index)"
-          />
+          <i class="na-link iconfont icon-shanchu" @click="delImg(index)" />
         </div>
       </div>
     </div>
-    <div 
+    <div
       class="na-image na-input-wrapper"
       v-show="images.length < props.maxCount"
       @drop="images.length < props.maxCount ? drop($event) : stopDrag($event)"
@@ -118,7 +131,7 @@ defineExpose({ size })
 </template>
 
 <style scoped lang="scss">
-.na-image-uploader{
+.na-image-uploader {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
@@ -133,15 +146,15 @@ defineExpose({ size })
     grid-template-columns: 1fr;
   }
 
-  .na-image{
+  .na-image {
     aspect-ratio: 1 / 1;
     border-radius: var(--border-radius-md);
 
-    .na-link{
+    .na-link {
       font-size: 40px;
     }
-    
-    .na-image-footer-action>.na-link{
+
+    .na-image-footer-action > .na-link {
       font-size: 32px;
     }
   }
