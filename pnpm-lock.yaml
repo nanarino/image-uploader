@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   nanarinostyl:
-    specifier: ^0.2.11
-    version: 0.2.11
+    specifier: ^0.3.2
+    version: 0.3.2
   vue:
     specifier: ^3.4.21
     version: 3.4.21(typescript@5.3.3)
@@ -683,8 +683,8 @@ packages:
     resolution: {integrity: sha512-ckmWDJjphvd/FvZawgygcUeQCxzvohjFO5RxTjj4eq8kw359gFF3E1brjfI+viLMxss5JrHTDRHZvu2/tuy0Qg==}
     dev: true
 
-  /nanarinostyl@0.2.11:
-    resolution: {integrity: sha512-GFyDxKouBo6G23Sk/Djcq/bIFEJJctcxtpGRB/Qur3zXoBRlbKNndjDGb21vWWGtJDaXhYZe/mOYtwgNRmit6A==}
+  /nanarinostyl@0.3.2:
+    resolution: {integrity: sha512-ichZZkX5QG+dWCKVzEvSTpXTmq/7uftAgMVwtdKBKdZ0SGtSrzNtf95A9TcS52G0bexgDzPDBW6ZwIClmP7jJw==}
     dev: false
 
   /nanoid@3.3.7:

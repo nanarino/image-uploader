@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "nanarinostyl": "^0.2.11",
+    "nanarinostyl": "^0.3.2",
     "vue": "^3.4.21"
   },
   "devDependencies": {
