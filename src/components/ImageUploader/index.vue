@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { Gazo } from "./interface";
 
-const images = defineModel<Gazo[]>("modelValue", { default: [] });
+const images = defineModel<Gazo[]>("modelValue", { default: () => [] });
 const props = withDefaults(
   defineProps<{
     accept?: string[];
