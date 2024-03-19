@@ -1,12 +1,12 @@
 {
-  "name": "vue-image-uploader",
+  "name": "image-uploader",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "build-gh-pages": "vite build --base /vue-image-uploader/",
+    "build-gh-pages": "vite build --base /image-uploader/",
     "preview": "vite preview"
   },
   "dependencies": {

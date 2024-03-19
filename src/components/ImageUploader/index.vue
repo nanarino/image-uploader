@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { Gazo } from "./interface";
+import { Image } from "./interface";
 
-const images = defineModel<Gazo[]>("modelValue", { default: () => [] });
+const images = defineModel<Image[]>("modelValue", { default: () => [] });
 const props = withDefaults(
   defineProps<{
     accept?: string[];
@@ -15,8 +15,10 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  (event: "update:modelValue", item: Gazo[]): void;
-  (event: "change", item: { file: Gazo; action: "append" | "remove" }): void;
+  (
+    event: "change",
+    item: { images: Image[]; action: "append" | "remove" }
+  ): void;
   (event: "overflow"): void;
 }>();
 
@@ -24,7 +26,7 @@ const stopDrag = (e: DragEvent) => {
   e.stopPropagation();
   e.preventDefault();
 };
-const drop = async (e: DragEvent) => {
+const handleDrop = async (e: DragEvent) => {
   e.stopPropagation();
   e.preventDefault();
   if (
@@ -33,60 +35,57 @@ const drop = async (e: DragEvent) => {
   ) {
     return emit("overflow");
   }
-  await setImgList(e.dataTransfer?.files || []);
+  await append(e.dataTransfer?.files || []);
 };
 
-const setImgList = async (files: FileList | Array<File>) => {
-  await Promise.all(
+const append = async (files: FileList | (File | Image)[]) => {
+  const imgs = await Promise.all(
     Array.from(files)
       .filter(
         (v) => props.accept.filter((t) => new RegExp(t).test(v.type)).length
       )
-      .map(fileAdd)
+      .map(async (i) => {
+        if ("url" in i) return i;
+        return new Promise<Image>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(i as File);
+          reader.onload = () => {
+            Reflect.set(i, "url", reader.result);
+            resolve(i);
+          };
+        });
+      })
   );
+  emit("change", {
+    images: imgs,
+    action: "append",
+  });
+  images.value = [...images.value, ...imgs];
 };
 
-const fileAdd = async (file: File) =>
-  new Promise<void>((resolve, reject) => {
-    // const url = URL.createObjectURL(file)
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      Reflect.set(file, "url", reader.result);
-      images.value.push(file);
-      // 还是需手动emit 它没有提供defineModels那样的deep选项 只能对简单类型自动emit
-      emit("update:modelValue", images.value);
-      emit("change", {
-        file,
-        action: "append",
-      });
-      resolve();
-    };
-  });
-
-const updateImg = async (e: Event) => {
+const handleInput = async (e: Event) => {
   const files = (<HTMLInputElement>e.target)?.files || <File[]>[];
   if (images.value.length + files.length <= props.maxCount) {
-    await setImgList(files);
+    await append(files);
   } else {
     emit("overflow");
   }
   (<HTMLInputElement>e.target).value = "";
 };
-const delImg = (index: number) => {
+
+const remove = (index: number) => {
   emit("change", {
-    file: images.value.at(index) as Gazo,
+    images: images.value.splice(index, 1),
     action: "remove",
   });
-  images.value.splice(index, 1);
-  // 还是需手动emit 它没有提供defineModels那样的deep选项 只能对简单类型自动emit
-  emit("update:modelValue", images.value);
+  images.value = [...images.value]; // 相当于emit('update:modelValue')
 };
 
 const size = computed(() =>
   images.value.reduce((size, file) => size + file.size, 0)
 );
-defineExpose({ size });
+
+defineExpose({ append, remove, size });
 </script>
 
 <template>
@@ -105,14 +104,16 @@ defineExpose({ size });
           </div>
         </div>
         <div class="na-image-footer-action">
-          <i class="na-link iconfont icon-shanchu" @click="delImg(index)" />
+          <i class="na-link iconfont icon-shanchu" @click="remove(index)" />
         </div>
       </div>
     </div>
     <div
       class="na-image na-input-wrapper"
       v-show="images.length < props.maxCount"
-      @drop="images.length < props.maxCount ? drop($event) : stopDrag($event)"
+      @handleDrop="
+        images.length < props.maxCount ? handleDrop($event) : stopDrag($event)
+      "
       @dragenter="stopDrag"
       @dragover="stopDrag"
       data-primary
@@ -121,7 +122,7 @@ defineExpose({ size });
         type="file"
         class="na-input"
         :accept="`${accept || 'image/*'}`"
-        @change="updateImg"
+        @change="handleInput"
         multiple
       />
       <i class="na-link iconfont icon-tianjia" />

@@ -1,4 +1,4 @@
-# vue-image-uploader
+# image-uploader
 
 用于图片上传的vue3组件demo
 
