@@ -15,11 +15,8 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  (
-    event: "change",
-    item: { images: Image[]; action: "append" | "remove" }
-  ): void;
-  (event: "overflow"): void;
+  change: [item: { images: Image[]; action: "append" | "remove" }];
+  overflow: [];
 }>();
 
 const stopDrag = (e: DragEvent) => {
