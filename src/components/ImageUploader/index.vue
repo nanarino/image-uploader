@@ -108,7 +108,7 @@ defineExpose({ append, remove, size });
     <div
       class="na-image na-input-wrapper"
       v-show="images.length < props.maxCount"
-      @handleDrop="
+      @drop="
         images.length < props.maxCount ? handleDrop($event) : stopDrag($event)
       "
       @dragenter="stopDrag"
