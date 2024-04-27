@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import './style.css'
-import './assets/iconfont/iconfont.css'
+import 'virtual:svg-icons-register'
 import App from './App.vue'
 
 createApp(App).mount('#app')

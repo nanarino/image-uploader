@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { Image } from "./interface";
+import { Icon } from "@/components/Icons";
 
 const images = defineModel<Image[]>("modelValue", { default: () => [] });
 const props = withDefaults(
@@ -101,7 +102,7 @@ defineExpose({ append, remove, size });
           </div>
         </div>
         <div class="na-image-footer-action">
-          <i class="na-link iconfont icon-shanchu" @click="remove(index)" />
+          <Icon name="delete" class="na-link" @click="remove(index)" />
         </div>
       </div>
     </div>
@@ -122,7 +123,7 @@ defineExpose({ append, remove, size });
         @change="handleInput"
         multiple
       />
-      <i class="na-link iconfont icon-tianjia" />
+      <Icon name="plus" style="font-size: 48px" />
       <span>点击添加或拖拽图片</span>
     </div>
   </div>
@@ -149,11 +150,7 @@ defineExpose({ append, remove, size });
     border-radius: var(--border-radius-md);
 
     .na-link {
-      font-size: 40px;
-    }
-
-    .na-image-footer-action > .na-link {
-      font-size: 32px;
+      font-size: 22px;
     }
   }
 }

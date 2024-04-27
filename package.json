@@ -16,9 +16,11 @@
   "devDependencies": {
     "@holy-two/vite-plugin-alias": "0.0.2",
     "@vitejs/plugin-vue": "^4.6.2",
+    "fast-glob": "^3.3.2",
     "sass": "^1.71.1",
     "typescript": "^5.3.3",
     "vite": "^5.1.4",
+    "vite-plugin-svg-icons": "^2.0.1",
     "vue-tsc": "^1.8.27"
   }
 }

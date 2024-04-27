@@ -1,5 +1,5 @@
-import moon from "@/assets/moon.svg?raw";
-import sun from "@/assets/sun.svg?raw";
+import moon from "./moon.svg?raw";
+import sun from "./sun.svg?raw";
 import { h, defineComponent } from "vue";
 import "./index.scss";
 
