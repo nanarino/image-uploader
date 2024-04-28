@@ -14,6 +14,6 @@ const props = withDefaults(
 </script>
 <template>
   <svg aria-hidden="true" :width="props.width" :height="props.height">
-    <use :xlink:href="`#icon-${props.name.split('/').join('-')}`" fill="curretColor" />
+    <use :xlink:href="`#icon-${props.name.split('/').join('-')}`" />
   </svg>
 </template>
