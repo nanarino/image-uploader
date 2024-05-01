@@ -23,7 +23,7 @@ const change = async (item: {
 };
 
 void (async function init() {
-  const res = await fetch(`${import.meta.env.BASE_URL}Kirby.json`);
+  const res = await fetch(`${import.meta.env.BASE_URL}data/Kirby.json`);
   const Kirby = (await res.json()) as Image;
   if (Kirby.url) Kirby.url = Kirby.url.replace(/^\//, import.meta.env.BASE_URL);
   imgs.value.push(Kirby);
