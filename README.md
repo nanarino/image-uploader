@@ -18,4 +18,4 @@ pnpm build
 
 ## Item Frame
 
-<img src="./public/logo/Vite.png" alt="Vite" width="33%"/> <img src="./public/logo/Vue.png" alt="Vue" width="33%"/> <img src="./public/logo/TypeScript.png" alt="TypeScript" width="33%"/>
+<img src="./public/logo/Vite.png" alt="Vite" width="33%"/><img src="./public/logo/Vue.png" alt="Vue" width="33%"/><img src="./public/logo/TypeScript.png" alt="TypeScript" width="33%"/>
