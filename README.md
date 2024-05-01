@@ -18,8 +18,6 @@ pnpm build
 
 ## Item Frame
 
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr">
-  <img src="./public/logo/Vite.png" alt="Vite"/>
-  <img src="./public/logo/Vue.png" alt="Vue"/>
-  <img src="./public/logo/TypeScript.png" alt="TypeScript"/>
-</div>
+<img src="./public/logo/Vite.png" alt="Vite" width="33%"/>  
+<img src="./public/logo/Vue.png" alt="Vue" width="33%"/>  
+<img src="./public/logo/TypeScript.png" alt="TypeScript" width="33%"/>  
