@@ -1,87 +1,87 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { Image } from "./interface";
-import { Icon } from "@/components/Icons";
+import { computed } from "vue"
+import { Image } from "./interface"
+import { Icon } from "@/components/Icons"
 
-const images = defineModel<Image[]>("modelValue", { default: () => [] });
+const images = defineModel<Image[]>("modelValue", { default: () => [] })
 const props = withDefaults(
   defineProps<{
-    accept?: string[];
-    maxCount?: number;
+    accept?: string[]
+    maxCount?: number
   }>(),
   {
     accept: () => ["image/*"],
     maxCount: Infinity,
   }
-);
+)
 
 const emit = defineEmits<{
-  change: [item: { images: Image[]; action: "append" | "remove" }];
-  overflow: [];
-}>();
+  change: [item: { images: Image[]; action: "append" | "remove" }]
+  overflow: []
+}>()
 
 const stopDrag = (e: DragEvent) => {
-  e.stopPropagation();
-  e.preventDefault();
-};
+  e.stopPropagation()
+  e.preventDefault()
+}
 const handleDrop = async (e: DragEvent) => {
-  e.stopPropagation();
-  e.preventDefault();
+  e.stopPropagation()
+  e.preventDefault()
   if (
     images.value.length + (e.dataTransfer?.files?.length || 0) >
     props.maxCount
   ) {
-    return emit("overflow");
+    return emit("overflow")
   }
-  await append(e.dataTransfer?.files || []);
-};
+  await append(e.dataTransfer?.files || [])
+}
 
 const append = async (files: FileList | (File | Image)[]) => {
   const imgs = await Promise.all(
     Array.from(files)
       .filter(v => props.accept.filter(t => new RegExp(t).test(v.type)).length)
       .map(async i => {
-        if ("url" in i) return i;
+        if ("url" in i) return i
         return new Promise<Image>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(i as File);
+          const reader = new FileReader()
+          reader.readAsDataURL(i as File)
           reader.onload = () => {
-            Reflect.set(i, "url", reader.result);
-            resolve(i);
-          };
-        });
+            Reflect.set(i, "url", reader.result)
+            resolve(i)
+          }
+        })
       })
-  );
+  )
   emit("change", {
     images: imgs,
     action: "append",
-  });
-  images.value = [...images.value, ...imgs];
-};
+  })
+  images.value = [...images.value, ...imgs]
+}
 
 const handleInput = async (e: Event) => {
-  const files = (<HTMLInputElement>e.target)?.files || <File[]>[];
+  const files = (<HTMLInputElement>e.target)?.files || <File[]>[]
   if (images.value.length + files.length <= props.maxCount) {
-    await append(files);
+    await append(files)
   } else {
-    emit("overflow");
+    emit("overflow")
   }
-  (<HTMLInputElement>e.target).value = "";
-};
+  ;(<HTMLInputElement>e.target).value = ""
+}
 
 const remove = (index: number) => {
   emit("change", {
     images: images.value.splice(index, 1),
     action: "remove",
-  });
-  images.value = [...images.value]; // 相当于emit('update:modelValue')
-};
+  })
+  images.value = [...images.value] // 相当于emit('update:modelValue')
+}
 
 const size = computed(() =>
   images.value.reduce((size, file) => size + file.size, 0)
-);
+)
 
-defineExpose({ append, remove, size });
+defineExpose({ append, remove, size })
 </script>
 
 <template>

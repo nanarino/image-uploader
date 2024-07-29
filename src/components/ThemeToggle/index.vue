@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { Icon } from "@/components/Icons";
+import { Icon } from "@/components/Icons"
 
-const themeTuple = ["dark", "light"] as const;
+const themeTuple = ["dark", "light"] as const
 function handleClick(e: MouseEvent) {
-  const theme = themeTuple.at(themeTuple.indexOf(window.theme) - 1);
+  const theme = themeTuple.at(themeTuple.indexOf(window.theme) - 1)
   if (theme) {
-    document.documentElement.dataset["theme"] = theme;
-    localStorage.setItem("theme", theme);
+    document.documentElement.dataset["theme"] = theme
+    localStorage.setItem("theme", theme)
   }
 }
 </script>

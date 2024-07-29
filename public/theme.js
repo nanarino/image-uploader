@@ -8,5 +8,5 @@ Object.defineProperty(window, "theme", {
     ["dark", "light"][
       +!window.matchMedia?.("(prefers-color-scheme: dark)")?.matches
     ],
-});
-document.documentElement.dataset["theme"] = window.theme;
+})
+document.documentElement.dataset["theme"] = window.theme
