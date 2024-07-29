@@ -48,7 +48,7 @@ export class Launcher {
     if (primary) {
       const p = msg.firstElementChild as HTMLDivElement;
       p.dataset.primary = primary;
-      Object.entries(style).map((x) => p.style.setProperty(...x));
+      Object.entries(style).map(x => p.style.setProperty(...x));
     }
     this.queue.appendChild(msg);
     msg.style.height = `${msg.offsetHeight}px`;

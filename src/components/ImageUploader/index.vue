@@ -39,10 +39,8 @@ const handleDrop = async (e: DragEvent) => {
 const append = async (files: FileList | (File | Image)[]) => {
   const imgs = await Promise.all(
     Array.from(files)
-      .filter(
-        (v) => props.accept.filter((t) => new RegExp(t).test(v.type)).length
-      )
-      .map(async (i) => {
+      .filter(v => props.accept.filter(t => new RegExp(t).test(v.type)).length)
+      .map(async i => {
         if ("url" in i) return i;
         return new Promise<Image>((resolve, reject) => {
           const reader = new FileReader();
