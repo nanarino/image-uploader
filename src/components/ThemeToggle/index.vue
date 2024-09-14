@@ -1,22 +1,9 @@
 <script setup lang="ts">
 import { Icon } from "@/components/Icons"
-
-const themeTuple = ["dark", "light"] as const
-function handleClick(e: MouseEvent) {
-  const theme = themeTuple.at(themeTuple.indexOf(window.theme) - 1)
-  if (theme) {
-    document.documentElement.dataset["theme"] = theme
-    localStorage.setItem("theme", theme)
-  }
-}
+import toggle from "@holy-two/data-theme/dist/toggle"
 </script>
 <template>
-  <button
-    class="na-button"
-    title="theme toggle"
-    data-round
-    @click="handleClick"
-  >
+  <button class="na-button" title="theme toggle" data-round @click="toggle">
     <Icon name="moon" />
     <Icon name="sun" />
   </button>
